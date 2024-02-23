@@ -2,8 +2,6 @@ package core.artifact
 {
    import generics.Localize;
    import goki.FitnessConfig;
-   import core.hud.components.chat.MessageLog;
-   import flash.utils;
    
    public class ArtifactStat
    {
@@ -18,94 +16,6 @@ package core.artifact
          super();
          this.type = param1;
          this.value = param2;
-      }
-      
-      public static function parseTextFromStatType(param1:String, param2:Number) : String
-      {
-         var _loc3_:String = "<FONT COLOR=\'#ffffff\'>";
-         var _loc4_:String = "</FONT>";   
-         var modifier:String = param1 == "refire" ? " (s)" : "";
-         modifier += param1.indexOf("2") != -1 && param1 != "refier2" ? " (s)" : "";
-         modifier += param1.indexOf("3") != -1 ? " (e)" : "";
-         switch(param1)
-         {
-            case "healthAdd":
-            case "healthAdd2":
-            case "healthAdd3":
-               return _loc3_ + "+" + (2 * param2).toFixed(1) + _loc4_ + " " + Localize.t("health") + modifier;
-            case "healthMulti":
-               return _loc3_ + "+" + (1.35 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("health");
-            case "armorAdd":
-            case "armorAdd2":
-            case "armorAdd3":
-               return _loc3_ + "+" + (7.5 * param2).toFixed(1) + _loc4_ + " " + Localize.t("armor") + modifier;
-            case "armorMulti":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("armor");
-            case "corrosiveAdd":
-            case "corrosiveAdd2":
-            case "corrosiveAdd3":
-               return _loc3_ + "+" + (4 * param2).toFixed(1) + _loc4_ + " " + Localize.t("corrosive dmg") + modifier;
-            case "corrosiveMulti":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("corrosive dmg");
-            case "energyAdd":
-            case "energyAdd2":
-            case "energyAdd3":
-               return _loc3_ + "+" + (4 * param2).toFixed(1) + _loc4_ + " " + Localize.t("energy dmg") + modifier;
-            case "energyMulti":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("energy dmg");
-            case "kineticAdd":
-            case "kineticAdd2":
-            case "kineticAdd3":
-               return _loc3_ + "+" + (4 * param2).toFixed(1) + _loc4_ + " " + Localize.t("kinetic dmg") + modifier;
-            case "kineticMulti":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("kinetic dmg");
-            case "shieldAdd":
-            case "shieldAdd2":
-            case "shieldAdd3":
-               return _loc3_ + "+" + (1.75 * param2).toFixed(1) + _loc4_ + " " + Localize.t("shield") + modifier;
-            case "shieldMulti":
-               return _loc3_ + "+" + (1.35 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("shield");
-            case "shieldRegen":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("shield regen");
-            case "corrosiveResist":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("corrosive resist");
-            case "energyResist":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("energy resist");
-            case "kineticResist":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("kinetic resist");
-            case "allResist":
-               return _loc3_ + "+" + param2.toFixed(1) + "%" + _loc4_ + " " + Localize.t("all resist");
-            case "allAdd":
-            case "allAdd2":
-            case "allAdd3":
-               return _loc3_ + "+" + (1.5 * param2).toFixed(1) + _loc4_ + " " + Localize.t("to all dmg") + modifier;
-            case "allMulti":
-               return _loc3_ + "+" + (1.5 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("to all dmg");
-            case "speed":
-            case "speed2":
-            case "speed3":
-               return _loc3_ + "+" + (0.2 * param2).toFixed(2) + "%" + _loc4_ + " " + Localize.t("inc speed") + modifier;
-            case "refire":
-            case "refire2":
-            case "refire3":
-               return _loc3_ + "+" + (0.3 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("inc attack speed") + modifier;
-            case "convHp":
-               return _loc3_ + "-" + (0.1 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("hp to 150% shield");
-            case "convShield":
-               return _loc3_ + "-" + (0.1 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("shield to 150% hp");
-            case "powerReg":
-            case "powerReg2":
-            case "powerReg3":
-               return _loc3_ + "+" + (0.15 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("inc power regen") + modifier;
-            case "powerMax":
-               return _loc3_ + "+" + (1.5 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("inc maximum power");
-            case "cooldown":
-            case "cooldown2":
-            case "cooldown3":
-               return _loc3_ + "+" + (0.1 * param2).toFixed(1) + "%" + _loc4_ + " " + Localize.t("reduced cooldown") + modifier;
-            default:
-               return "undefined";
-         }
       }
       
       public static function parseTextFromStatTypeShort(param1:String, param2:Number) : String
@@ -191,10 +101,10 @@ package core.artifact
                return "ERROR - artifact not found";
          }
       }
-
+      
       public static function statDistribution(statType:String, statValue:Number, lines:int, lineNumber:int, str:int) : Number
       {
-         return str - (statValue * FitnessConfig.statDistribution[statType][2] - FitnessConfig.statDistribution[statType][1] * FitnessConfig.lineDistribution[lines.toString()][lineNumber]) / FitnessConfig.statDistribution[statType][0] / FitnessConfig.lineDistribution[lines.toString()][lineNumber];
+         return (statValue * FitnessConfig.statDistribution[statType][2] - FitnessConfig.statDistribution[statType][1] * FitnessConfig.lineDistribution[lines.toString()][lineNumber]) / FitnessConfig.statDistribution[statType][0] / FitnessConfig.lineDistribution[lines.toString()][lineNumber] - str;
       }
       
       public function get statFitness() : Number
@@ -261,9 +171,9 @@ package core.artifact
             case "refire3":
                return 0.3 * 1.298 * FitnessConfig.values.refire * this.value;
             case "convHp":
-               return 0.1 * 0.5 * FitnessConfig.values.convHp * clamp(this.value, 0, 990);
+               return 0.1 * 0.5 * FitnessConfig.values.convHp * clamp(this.value,0,990);
             case "convShield":
-               return 0.1 * 0.5 * FitnessConfig.values.convShield * clamp(this.value, 0, 990);
+               return 0.1 * 0.5 * FitnessConfig.values.convShield * clamp(this.value,0,990);
             case "powerReg":
             case "powerReg2":
             case "powerReg3":
@@ -278,10 +188,10 @@ package core.artifact
                return 0;
          }
       }
-
+      
       private function clamp(val:Number, min:Number, max:Number) : Number
       {
-         return Math.max(Math.min(val, max), min);
+         return Math.max(Math.min(val,max),min);
       }
    }
 }
