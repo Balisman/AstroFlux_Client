@@ -3,7 +3,6 @@ package core.player
    import com.greensock.TweenMax;
    import core.artifact.Artifact;
    import core.artifact.ArtifactFactory;
-   import core.artifact.ArtifactStat;
    import core.friend.Friend;
    import core.group.Group;
    import core.hud.components.chat.MessageLog;
@@ -14,7 +13,6 @@ package core.player
    import core.ship.PlayerShip;
    import core.ship.ShipFactory;
    import core.solarSystem.Body;
-   import core.spawner.Spawner;
    import core.states.StateMachine;
    import core.states.gameStates.RoamingState;
    import core.states.player.Killed;
@@ -31,6 +29,7 @@ package core.player
    import data.IDataManager;
    import debug.Console;
    import facebook.Action;
+   import flash.utils.Dictionary;
    import goki.PlayerConfig;
    import movement.Heading;
    import playerio.Message;
@@ -38,7 +37,6 @@ package core.player
    import sound.SoundLocator;
    import starling.core.Starling;
    import starling.display.Image;
-   import flash.utils.Dictionary;
    
    public class Player
    {
@@ -261,9 +259,9 @@ package core.player
       private var updateInterval:int;
       
       public var isLanded:Boolean = false;
-
+      
       public var stacksNumber:int = 0;
-
+      
       public var stackedArts:Dictionary;
       
       public function Player(param1:Game, param2:String)
@@ -939,7 +937,7 @@ package core.player
             stateMachine.changeState(new Roaming(this,g));
          }
       }
-
+      
       public function fakeRoaming() : void
       {
          g.fadeIntoState(new RoamingState(g));
@@ -1017,7 +1015,7 @@ package core.player
          }
          else
          {
-            respawnNextReady = g.time + 10000;
+            respawnNextReady = g.time + 5000;
          }
          stateMachine.changeState(new Killed(this,g,param1));
          stacksNumber = 0;
@@ -1526,7 +1524,6 @@ package core.player
                g.hud.showArtifactLimitText();
             }
          }
-         
          if(_loc9_)
          {
             MessageLog.writeChatMsg("loot","<FONT COLOR=\'#ffcc44\'>Auto recycled artifact</FONT>");
@@ -2160,7 +2157,7 @@ package core.player
          weaponData = new Vector.<WeaponDataHolder>();
          for each(var _loc2_ in param1)
          {
-            _loc3_ = _loc2_.getDescription(_loc2_ is Beam);
+            _loc3_ = String(_loc2_.getDescription(_loc2_ is Beam));
             _loc4_ = new WeaponDataHolder(_loc2_.key,_loc3_);
             weaponData.push(_loc4_);
          }
@@ -2539,39 +2536,36 @@ package core.player
          encounters = null;
          clanLogo = null;
       }
-
+      
       public function initStack() : void
       {
          if(g.room.data.systemType != "clan" && g.room.data.systemType != "survival")
          {
             return;
          }
-
          var currentShip:String = activeSkin;
-         g.send("changeSkin", "26D6095B-CAE9-0836-C135-EE930F7F23D1");
+         g.send("changeSkin","26D6095B-CAE9-0836-C135-EE930F7F23D1");
          g.send("leaveBody");
-         g.send("changeArtifactSetup", 1);
-         g.send("changeSkin", "8MF0AISMwUiETtnF1GJO6g");
+         g.send("changeArtifactSetup",1);
+         g.send("changeSkin","8MF0AISMwUiETtnF1GJO6g");
          g.send("leaveBody");
-         g.send("changeArtifactSetup", 1);
-         g.send("changeSkin", "C5weu3O-OUqW-W2zuKbKXQ");
+         g.send("changeArtifactSetup",1);
+         g.send("changeSkin","C5weu3O-OUqW-W2zuKbKXQ");
          g.send("leaveBody");
-         g.send("changeArtifactSetup", 1);
-         g.send("changeSkin", currentShip);
+         g.send("changeArtifactSetup",1);
+         g.send("changeSkin",currentShip);
          g.send("leaveBody");
       }
-
+      
       public function stack(amount:int = 1) : void
       {
          if(g.room.data.systemType != "clan" && g.room.data.systemType != "survival")
          {
             return;
          }
-
          var currentShip:String = activeSkin;
          var currentSet:int = activeArtifactSetup;
          var currentArts:Array = artifactSetups[currentSet];
-
          for each(var art in currentArts)
          {
             if(stackedArts.hasOwnProperty(art))
@@ -2583,69 +2577,66 @@ package core.player
                stackedArts[art] = amount;
             }
          }
-
          stacksNumber += amount;
-
          while(amount--)
          {
-            g.send("changeSkin", "26D6095B-CAE9-0836-C135-EE930F7F23D1");
-            g.send("changeArtifactSetup", currentSet);
-            g.send("changeSkin", "8MF0AISMwUiETtnF1GJO6g");
-            g.send("changeArtifactSetup", currentSet);
-            g.send("changeSkin", "C5weu3O-OUqW-W2zuKbKXQ");
-            g.send("changeArtifactSetup", currentSet);
-            g.send("toggleArtifact", currentArts[0]);
-            g.send("toggleArtifact", currentArts[1]);
-            g.send("toggleArtifact", currentArts[2]);
-            g.send("toggleArtifact", currentArts[3]);
-            g.send("toggleArtifact", currentArts[4]);
-            g.send("changeArtifactSetup", 1);
-            g.send("toggleArtifact", currentArts[0]);
-            g.send("toggleArtifact", currentArts[1]);
-            g.send("toggleArtifact", currentArts[2]);
-            g.send("toggleArtifact", currentArts[3]);
-            g.send("toggleArtifact", currentArts[4]);
-            g.send("changeSkin", "26D6095B-CAE9-0836-C135-EE930F7F23D1");
-            g.send("changeArtifactSetup", 1);
-            g.send("changeSkin", "8MF0AISMwUiETtnF1GJO6g");
-            g.send("changeArtifactSetup", 1);
-            g.send("changeSkin", "C5weu3O-OUqW-W2zuKbKXQ");
-            g.send("changeArtifactSetup", 1);
-            g.send("toggleArtifact", currentArts[0]);
-            g.send("toggleArtifact", currentArts[1]);
-            g.send("toggleArtifact", currentArts[2]);
-            g.send("toggleArtifact", currentArts[3]);
-            g.send("toggleArtifact", currentArts[4]);
-            g.send("changeArtifactSetup", currentSet);
-            g.send("toggleArtifact", currentArts[0]);
-            g.send("toggleArtifact", currentArts[1]);
-            g.send("toggleArtifact", currentArts[2]);
-            g.send("toggleArtifact", currentArts[3]);
-            g.send("toggleArtifact", currentArts[4]);
+            g.send("changeSkin","26D6095B-CAE9-0836-C135-EE930F7F23D1");
+            g.send("changeArtifactSetup",currentSet);
+            g.send("changeSkin","8MF0AISMwUiETtnF1GJO6g");
+            g.send("changeArtifactSetup",currentSet);
+            g.send("changeSkin","C5weu3O-OUqW-W2zuKbKXQ");
+            g.send("changeArtifactSetup",currentSet);
+            g.send("toggleArtifact",currentArts[0]);
+            g.send("toggleArtifact",currentArts[1]);
+            g.send("toggleArtifact",currentArts[2]);
+            g.send("toggleArtifact",currentArts[3]);
+            g.send("toggleArtifact",currentArts[4]);
+            g.send("changeArtifactSetup",1);
+            g.send("toggleArtifact",currentArts[0]);
+            g.send("toggleArtifact",currentArts[1]);
+            g.send("toggleArtifact",currentArts[2]);
+            g.send("toggleArtifact",currentArts[3]);
+            g.send("toggleArtifact",currentArts[4]);
+            g.send("changeSkin","26D6095B-CAE9-0836-C135-EE930F7F23D1");
+            g.send("changeArtifactSetup",1);
+            g.send("changeSkin","8MF0AISMwUiETtnF1GJO6g");
+            g.send("changeArtifactSetup",1);
+            g.send("changeSkin","C5weu3O-OUqW-W2zuKbKXQ");
+            g.send("changeArtifactSetup",1);
+            g.send("toggleArtifact",currentArts[0]);
+            g.send("toggleArtifact",currentArts[1]);
+            g.send("toggleArtifact",currentArts[2]);
+            g.send("toggleArtifact",currentArts[3]);
+            g.send("toggleArtifact",currentArts[4]);
+            g.send("changeArtifactSetup",currentSet);
+            g.send("toggleArtifact",currentArts[0]);
+            g.send("toggleArtifact",currentArts[1]);
+            g.send("toggleArtifact",currentArts[2]);
+            g.send("toggleArtifact",currentArts[3]);
+            g.send("toggleArtifact",currentArts[4]);
          }
-         g.send("changeSkin", currentShip);
+         g.send("changeSkin",currentShip);
          g.send("leaveBody");
       }
-
+      
       public function setStackedStats() : void
       {
          for(var art in stackedArts)
          {
-            for each (var stat in getArtifactById(art).stats)
+            for each(var stat in getArtifactById(art).stats)
             {
-               addIndividualStat(stat.type, stat.value * stackedArts[art] * 4);
+               addIndividualStat(stat.type,stat.value * stackedArts[art] * 4);
             }
          }
       }
-
+      
       public function unstack() : void
       {
       }
-
-      private function addIndividualStat(stat:String, value:Number) : void 
+      
+      private function addIndividualStat(stat:String, value:Number) : void
       {
          var cnt:int = 0;
-
          switch(stat)
          {
             case "healthAdd":
@@ -2766,21 +2757,21 @@ package core.player
                ship.addConvert();
                break;
             case "corrosiveResist":
-               ship.resistances[2] = ship.resistances[2] + value;
+               ship.resistances[2] += value;
                if(ship.resistances[2] < 0)
                {
                   ship.resistances[2] = 0;
                }
                break;
             case "kineticResist":
-               ship.resistances[0] = ship.resistances[0] + value;
+               ship.resistances[0] += value;
                if(ship.resistances[0] < 0)
                {
                   ship.resistances[0] = 0;
                }
                break;
             case "energyResist":
-               ship.resistances[1] = ship.resistances[1] + value;
+               ship.resistances[1] += value;
                if(ship.resistances[1] < 0)
                {
                   ship.resistances[1] = 0;
@@ -2790,7 +2781,7 @@ package core.player
                cnt = 0;
                while(cnt < 5)
                {
-                  ship.resistances[cnt] = ship.resistances[cnt] + value * Damage.stats[5][cnt];
+                  ship.resistances[cnt] += value * Damage.stats[5][cnt];
                   if(ship.resistances[cnt] < 0)
                   {
                      ship.resistances[cnt] = 0;
@@ -2878,7 +2869,7 @@ package core.player
             case "powerReg2":
             case "powerReg3":
                ship.powerRegBonus += 0.001 * 1.5 * value;
-               ship.weaponHeat.setBonuses(ship.maxPower + ship.aritfact_powerMax, ship.powerRegBonus + ship.aritfact_poweReg);
+               ship.weaponHeat.setBonuses(ship.maxPower + ship.aritfact_powerMax,ship.powerRegBonus + ship.aritfact_poweReg);
                break;
             case "powerMax":
                ship.aritfact_powerMax += 0.01 * 1.5 * value;
@@ -2898,17 +2889,18 @@ package core.player
                }
                ship.aritfact_cooldownReduction += 0.001 * value;
                cnt = 0;
-               while(cnt < ship.weapons.length)
+               while(true)
                {
-                  if(ship.weapons[cnt] is Teleport || ship.weapons[cnt] is Cloak)
+                  if(cnt < ship.weapons.length)
                   {
-                     ship.weapons[cnt].reloadTime /= 1 + ship.aritfact_cooldownReduction;
+                     if(ship.weapons[cnt] is Teleport || ship.weapons[cnt] is Cloak)
+                     {
+                        ship.weapons[cnt].reloadTime /= 1 + ship.aritfact_cooldownReduction;
+                     }
+                     cnt++;
+                     continue;
                   }
-                  cnt++;
                }
-               break;
-            default:
-               break;
          }
          g.hud.healthAndShield.update();
          g.hud.weaponHotkeys.refresh();
